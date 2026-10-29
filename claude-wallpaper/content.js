@@ -80,21 +80,36 @@
 
   // A column of text with no background of its own (the conversation, a project's
   // overview) would sit straight on the wallpaper; it gets a soft backing instead.
-  // Side-by-side columns with no gap get one backing; two would overlap their padding.
-  function isRow(el, r, vw) {
-    if (r.width > vw * 0.8 || el.children.length < 2) return false;
-    const cols = [...el.children].map((c) => c.getBoundingClientRect()).filter((c) => c.width >= 320)
-      .sort((a, b) => a.left - b.left);
-    return cols.some((c, i) => {
-      if (!i) return false;
-      const gap = c.left - cols[i - 1].right;
-      return gap >= -1 && gap < 48 && Math.abs(c.top - cols[i - 1].top) < 80;
+  // Side-by-side columns close enough for their padding to overlap get one backing, but
+  // only when none already sits on a surface of its own; otherwise each stands alone.
+  function sideBySide(el) {
+    if (el.children.length < 2) return null;
+    const cols = [...el.children].map((c) => [c, c.getBoundingClientRect()]).filter(([, b]) => b.width >= 320)
+      .sort((x, y) => x[1].left - y[1].left);
+    let paired = false, near = false;
+    cols.forEach(([, b], i) => {
+      if (!i || b.left < cols[i - 1][1].right - 1 || Math.abs(b.top - cols[i - 1][1].top) >= 80) return;
+      paired = true;
+      if (b.left - cols[i - 1][1].right < 48) near = true;
     });
+    return paired ? { cols: cols.map(([c]) => c), near } : null;
+  }
+  function boxed(col) {
+    const cr = col.getBoundingClientRect();
+    for (const d of [col, ...col.querySelectorAll(TAGS)]) {
+      const b = d.getBoundingClientRect();
+      if (b.width >= cr.width * 0.8 && b.height >= Math.min(cr.height * 0.5, 200) &&
+        (d.hasAttribute('data-cw') || hasPaint(getComputedStyle(d).backgroundColor) || d.classList.contains('rounded-card'))) return true;
+    }
+    return false;
   }
   function isColumn(el, r, vw, vh) {
-    return r.width >= 320 && (r.width <= 1000 || isRow(el, r, vw)) && r.height >= vh * 0.3 &&
-      !(el.parentElement && el.parentElement.closest('[data-cw="read"],[data-cw="panel"],[data-cw="glass"],[data-cw="card"]')) &&
-      el.textContent.length >= 200;
+    if (r.width < 320 || r.height < vh * 0.3 || el.textContent.length < 200 ||
+      (el.parentElement && el.parentElement.closest('[data-cw="read"],[data-cw="panel"],[data-cw="glass"],[data-cw="card"]'))) return false;
+    const row = sideBySide(el);
+    if (row) return row.near && r.width <= vw * 0.8 && !row.cols.some(boxed);
+    // A transcript of many short turns only qualifies as a whole, so wide screens allow wider.
+    return r.width <= Math.max(1000, vw * 0.6);
   }
 
   function classify(el, vw, vh) {
