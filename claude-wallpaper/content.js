@@ -54,6 +54,18 @@
     const tone = lum > 0.5 ? 'dark' : 'light';
     if (root.dataset.cwTone !== tone) root.dataset.cwTone = tone;
     if (renderer) renderer.setVeil(settings.veil, tone === 'dark' ? '12,12,16' : '250,250,252');
+    // Text laid straight on the wallpaper follows the scene, not the page: dark text over
+    // a bright sky, light text over a dark one, judged from the sky seen through the veil.
+    const sky = CW.byId(settings.scene).sky;
+    if (sky) {
+      const lit = sky.reduce((sum, hex) => {
+        const n = parseInt(hex.slice(1), 16);
+        return sum + (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
+      }, 0) / sky.length;
+      const seen = lit * (1 - settings.veil) + (tone === 'dark' ? 0.05 : 0.98) * settings.veil;
+      const text = seen > 0.5 ? 'dark' : 'light';
+      if (root.dataset.cwText !== text) root.dataset.cwText = text;
+    }
     // The page colour, read from an untagged probe since body's own fill is overridden.
     const probe = document.createElement('div');
     probe.className = 'bg-surface-1';
