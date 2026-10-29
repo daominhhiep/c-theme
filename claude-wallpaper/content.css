@@ -1,0 +1,143 @@
+/* Wallpaper layer and frosted surfaces on claude.ai, plus the picker tiles (also used by the popup). */
+
+#cw-wallpaper {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  display: block;
+}
+html.cw-on { background: var(--cw-fallback, #0b1020) !important; }
+html.cw-on body { background: transparent !important; }
+
+html[data-cw-tone="dark"] {
+  --cw-glass: rgba(22, 22, 26, 0.5);
+  --cw-panel: rgba(18, 18, 22, 0.58);
+  --cw-card: rgba(24, 24, 28, 0.78);
+  --cw-tint: rgba(255, 255, 255, 0.06);
+  --cw-edge: rgba(255, 255, 255, 0.1);
+  --cw-read: rgba(20, 20, 24, 0.92);
+}
+html[data-cw-tone="light"] {
+  --cw-glass: rgba(255, 255, 255, 0.55);
+  --cw-panel: rgba(255, 255, 255, 0.62);
+  --cw-card: rgba(255, 255, 255, 0.8);
+  --cw-tint: rgba(0, 0, 0, 0.04);
+  --cw-edge: rgba(255, 255, 255, 0.7);
+  --cw-read: rgba(255, 255, 255, 0.92);
+}
+
+html.cw-glass-on [data-cw="clear"] {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+html.cw-glass-on [data-cw="panel"] {
+  background-color: var(--cw-panel) !important;
+  background-image: none !important;
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+}
+html.cw-glass-on [data-cw="glass"] {
+  background-color: var(--cw-glass) !important;
+  background-image: none !important;
+  backdrop-filter: blur(10px) saturate(1.3);
+  -webkit-backdrop-filter: blur(10px) saturate(1.3);
+}
+html.cw-glass-on [data-cw="card"] {
+  background-color: var(--cw-card) !important;
+  background-image: none !important;
+}
+html.cw-glass-on [data-cw="mask"] {
+  background-color: var(--cw-read) !important;
+  background-image: none !important;
+}
+html.cw-glass-on [data-cw="tint"] { background-color: var(--cw-tint) !important; }
+/* The spread shadow pads the column without touching its layout, wide enough that a
+   composer or card claude.ai lets hang past the column still sits inside it. */
+html.cw-glass-on [data-cw="read"] {
+  background-color: var(--cw-read) !important;
+  border-radius: 12px;
+  box-shadow: 0 0 0 24px var(--cw-read), 0 0 0 25px var(--cw-edge), 0 24px 60px 24px rgba(0, 0, 0, 0.22);
+}
+
+/* claude.ai blurs dozens of small icon buttons. Over a solid page that's cheap; over
+   a moving wallpaper each one is re-blurred every frame, so drop theirs. */
+html.cw-on [class*="backdrop-blur"]:not([data-cw]) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Text that sits straight on the wallpaper gets a soft halo in the page's own
+   background tone so it stays readable over busy scenes. */
+html.cw-glass-on[data-cw-tone="dark"] [data-cw="clear"] {
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 0, 0, 0.45);
+}
+html.cw-glass-on[data-cw-tone="light"] [data-cw="clear"] {
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.75), 0 0 10px rgba(255, 255, 255, 0.55);
+}
+html.cw-glass-on [data-cw]:not([data-cw="clear"]) { text-shadow: none; }
+
+/* ---------- picker ---------- */
+#cw-picker {
+  position: fixed;
+  left: 50%;
+  bottom: 120px;
+  transform: translateX(-50%);
+  z-index: 2147483000;
+  width: min(1040px, calc(100vw - 32px));
+  padding: 14px 16px 16px;
+  border-radius: 18px;
+  background: var(--cw-panel, rgba(18, 18, 22, 0.7));
+  border: 1px solid var(--cw-edge, rgba(255, 255, 255, 0.12));
+  backdrop-filter: blur(22px) saturate(1.4);
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  color: inherit;
+  font: 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.cw-picker-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.cw-picker-head span { opacity: 0.65; font-size: 12px; }
+
+.cw-tiles { display: grid; gap: 10px; }
+.cw-tiles-row { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+.cw-tile {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 4px;
+  outline: 2px solid transparent;
+  outline-offset: 0;
+  transition: outline-color 0.15s, transform 0.15s;
+}
+.cw-tile:hover { transform: translateY(-2px); }
+.cw-tile:focus-visible { outline-color: rgba(120, 190, 255, 0.9); }
+.cw-tile.is-active { outline-color: currentColor; }
+.cw-tile-view {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 9px;
+  background: rgba(127, 127, 127, 0.2);
+  font-size: 11px;
+  text-align: center;
+  align-content: center;
+  overflow: hidden;
+}
+.cw-tile-name { font-size: 12px; text-align: center; }
+.cw-tile.is-active .cw-tile-name::after { content: " ✓"; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-tile, .cw-tile:hover { transition: none; transform: none; }
+}

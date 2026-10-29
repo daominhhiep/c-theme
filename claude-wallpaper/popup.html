@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <title>Hình nền chuyển động</title>
+    <link rel="stylesheet" href="content.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Hình nền chuyển động</h1>
+      <p>Áp dụng cho claude.ai. Trên trang có thể mở nhanh bằng <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>T</kbd>.</p>
+    </header>
+    <div id="tiles" class="cw-tiles cw-tiles-grid"></div>
+    <section class="opts">
+      <label class="row">
+        <span>Khung chat dạng kính mờ</span>
+        <input type="checkbox" id="glass" />
+      </label>
+      <label class="col">
+        <span>Làm dịu hình nền <output id="veilOut"></output></span>
+        <input type="range" id="veil" min="0" max="0.7" step="0.05" />
+      </label>
+      <label class="col">
+        <span>Tốc độ <output id="speedOut"></output></span>
+        <input type="range" id="speed" min="0.25" max="2" step="0.25" />
+      </label>
+    </section>
+    <script src="scenes.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

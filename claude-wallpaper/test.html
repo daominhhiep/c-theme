@@ -1,0 +1,44 @@
+<!doctype html>
+<!-- Local preview: a rough stand-in for claude.ai's layout with the content script loaded.
+     Not part of the extension; Chrome only injects the scripts on claude.ai. -->
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thử hình nền</title>
+    <link rel="stylesheet" href="content.css" />
+    <style>
+      body { margin: 0; height: 100vh; display: flex; background: #262624; color: #ecebe6; font: 15px/1.6 system-ui, sans-serif; }
+      nav { width: 260px; flex: none; background: #1f1e1d; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+      nav a { color: inherit; text-decoration: none; padding: 6px 10px; border-radius: 8px; }
+      nav a.on { background: #30302e; }
+      main { flex: 1; background: #262624; display: flex; flex-direction: column; min-width: 0; }
+      .chat { flex: 1; overflow: auto; padding: 32px; max-width: 760px; margin: 0 auto; width: 100%; }
+      .user { background: #141413; border-radius: 14px; padding: 10px 14px; margin: 16px 0 16px auto; width: fit-content; max-width: 80%; }
+      .composer { margin: 0 auto 24px; width: min(760px, calc(100% - 32px)); background: #30302e; border-radius: 18px; padding: 16px; min-height: 90px; }
+      .composer textarea { all: unset; width: 100%; }
+      .tip { position: fixed; top: 10px; right: 14px; font-size: 12px; opacity: 0.7; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <strong style="padding: 6px 10px">Claude</strong>
+      <a class="on" href="#">Chủ đề hình nền</a>
+      <a href="#">Kế hoạch tuần</a>
+      <a href="#">Đọc tài liệu</a>
+      <a href="#">Kiểm tra báo cáo</a>
+    </nav>
+    <main>
+      <div class="chat">
+        <div class="user">Làm cho khung chat sống động hơn</div>
+        <p>Đây là tám hình nền chuyển động, vẽ hoàn toàn bằng ký tự. Chọn một cảnh, khung chat sẽ chuyển sang dạng kính mờ để chữ vẫn dễ đọc.</p>
+        <div class="user">Cho đầm rùa biển nhé</div>
+        <p>Đã áp dụng. Rùa biển bơi bên dưới mọi cuộc trò chuyện.</p>
+      </div>
+      <div class="composer"><textarea placeholder="Nhập tin nhắn…"></textarea></div>
+    </main>
+    <span class="tip">Alt + Shift + T để chọn cảnh</span>
+    <script src="scenes.js"></script>
+    <script src="content.js"></script>
+  </body>
+</html>
