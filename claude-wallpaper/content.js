@@ -79,7 +79,7 @@
   }
 
   // A column of text with no background of its own (the conversation, a project's
-  // overview) would sit straight on the wallpaper; it gets a soft backing instead.
+  // overview) sits straight on the wallpaper; its text is set heavier with a dark halo.
   // Side-by-side columns close enough for their padding to overlap get one backing, but
   // only when none already sits on a surface of its own; otherwise each stands alone.
   function sideBySide(el) {
@@ -134,9 +134,7 @@
       const cs = getComputedStyle(el);
       if (cs.backgroundColor === pageBg && cs.borderRadius === '0px') pageFill.add(el);
     }
-    // Inside a reading column they still have to hide the text scrolling under them, so
-    // they take the column's own fill instead.
-    if (pageFill.has(el) && r.width < vw * 0.75) return el.parentElement.closest('[data-cw="read"]') ? 'mask' : 'clear';
+    if (pageFill.has(el) && r.width < vw * 0.75) return 'clear';
     // The message box is glass wherever it sits, so text scrolling under it blurs away.
     if (r.width >= 320 && r.height < 240 && el.querySelector('[contenteditable="true"],textarea')) return 'glass';
     if (inside && r.width >= 160 && r.height >= 32) return 'tint';
@@ -174,21 +172,6 @@
       if (!covered) scan(n);
     }
     pending.clear();
-    fitReads();
-  }
-
-  // A mask can belong to a column yet hang below it (the strip under the message box);
-  // the column's backing is stretched down to take it in rather than ending above it.
-  function fitReads() {
-    for (const el of document.querySelectorAll('[data-cw="read"]')) {
-      const bottom = el.getBoundingClientRect().bottom;
-      let ext = 0;
-      for (const m of el.querySelectorAll('[data-cw="mask"]')) ext = Math.max(ext, m.getBoundingClientRect().bottom - bottom);
-      const v = ext > 0 ? Math.round(ext) + 'px' : '';
-      if (el.style.getPropertyValue('--cw-ext') !== v) {
-        if (v) el.style.setProperty('--cw-ext', v); else el.style.removeProperty('--cw-ext');
-      }
-    }
   }
 
   new MutationObserver((recs) => {

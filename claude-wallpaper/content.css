@@ -18,7 +18,6 @@ html[data-cw-tone="dark"] {
   --cw-card: rgba(24, 24, 28, 0.78);
   --cw-tint: rgba(255, 255, 255, 0.06);
   --cw-edge: rgba(255, 255, 255, 0.1);
-  --cw-read: rgb(24, 24, 28);
 }
 html[data-cw-tone="light"] {
   --cw-glass: rgba(255, 255, 255, 0.55);
@@ -26,7 +25,6 @@ html[data-cw-tone="light"] {
   --cw-card: rgba(255, 255, 255, 0.8);
   --cw-tint: rgba(0, 0, 0, 0.04);
   --cw-edge: rgba(255, 255, 255, 0.7);
-  --cw-read: rgb(252, 252, 253);
 }
 
 html.cw-glass-on [data-cw="clear"] {
@@ -49,21 +47,7 @@ html.cw-glass-on [data-cw="card"] {
   background-color: var(--cw-card) !important;
   background-image: none !important;
 }
-html.cw-glass-on [data-cw="mask"] {
-  background-color: var(--cw-read) !important;
-  background-image: none !important;
-}
 html.cw-glass-on [data-cw="tint"] { background-color: var(--cw-tint) !important; }
-/* The spread shadow pads the column without touching its layout, wide enough that a
-   composer or card claude.ai lets hang past the column still sits inside it; a copy
-   shifted by --cw-ext stretches it over a mask hanging below (see fitReads). */
-html.cw-glass-on [data-cw="read"] {
-  background-color: var(--cw-read) !important;
-  border-radius: 12px;
-  box-shadow: 0 0 0 24px var(--cw-read), 0 var(--cw-ext, 0px) 0 24px var(--cw-read),
-    0 0 0 25px var(--cw-edge), 0 var(--cw-ext, 0px) 0 25px var(--cw-edge), 0 24px 60px 24px rgba(0, 0, 0, 0.22);
-}
-
 /* claude.ai blurs dozens of small icon buttons. Over a solid page that's cheap; over
    a moving wallpaper each one is re-blurred every frame, so drop theirs. */
 html.cw-on [class*="backdrop-blur"]:not([data-cw]) {
@@ -79,7 +63,16 @@ html.cw-glass-on[data-cw-tone="dark"] [data-cw="clear"] {
 html.cw-glass-on[data-cw-tone="light"] [data-cw="clear"] {
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.75), 0 0 10px rgba(255, 255, 255, 0.55);
 }
-html.cw-glass-on [data-cw]:not([data-cw="clear"]) { text-shadow: none; }
+html.cw-glass-on [data-cw]:not([data-cw="clear"], [data-cw="read"]) { text-shadow: none; }
+/* Reading columns have no backing; a heavier weight and a tight dark outline keep long
+   text legible over the moving scene. */
+html.cw-glass-on [data-cw="read"] { font-weight: 500; }
+html.cw-glass-on[data-cw-tone="dark"] [data-cw="read"] {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 16px rgba(0, 0, 0, 0.75);
+}
+html.cw-glass-on[data-cw-tone="light"] [data-cw="read"] {
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.95), 0 1px 3px rgba(255, 255, 255, 0.85), 0 0 14px rgba(255, 255, 255, 0.7);
+}
 
 /* ---------- picker ---------- */
 #cw-picker {
