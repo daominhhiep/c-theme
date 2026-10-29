@@ -18,7 +18,7 @@ html[data-cw-tone="dark"] {
   --cw-card: rgba(24, 24, 28, 0.78);
   --cw-tint: rgba(255, 255, 255, 0.06);
   --cw-edge: rgba(255, 255, 255, 0.1);
-  --cw-read: rgba(20, 20, 24, 0.92);
+  --cw-read: rgb(24, 24, 28);
 }
 html[data-cw-tone="light"] {
   --cw-glass: rgba(255, 255, 255, 0.55);
@@ -26,7 +26,7 @@ html[data-cw-tone="light"] {
   --cw-card: rgba(255, 255, 255, 0.8);
   --cw-tint: rgba(0, 0, 0, 0.04);
   --cw-edge: rgba(255, 255, 255, 0.7);
-  --cw-read: rgba(255, 255, 255, 0.92);
+  --cw-read: rgb(252, 252, 253);
 }
 
 html.cw-glass-on [data-cw="clear"] {
@@ -55,11 +55,13 @@ html.cw-glass-on [data-cw="mask"] {
 }
 html.cw-glass-on [data-cw="tint"] { background-color: var(--cw-tint) !important; }
 /* The spread shadow pads the column without touching its layout, wide enough that a
-   composer or card claude.ai lets hang past the column still sits inside it. */
+   composer or card claude.ai lets hang past the column still sits inside it; a copy
+   shifted by --cw-ext stretches it over a mask hanging below (see fitReads). */
 html.cw-glass-on [data-cw="read"] {
   background-color: var(--cw-read) !important;
   border-radius: 12px;
-  box-shadow: 0 0 0 24px var(--cw-read), 0 0 0 25px var(--cw-edge), 0 24px 60px 24px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 0 0 24px var(--cw-read), 0 var(--cw-ext, 0px) 0 24px var(--cw-read),
+    0 0 0 25px var(--cw-edge), 0 var(--cw-ext, 0px) 0 25px var(--cw-edge), 0 24px 60px 24px rgba(0, 0, 0, 0.22);
 }
 
 /* claude.ai blurs dozens of small icon buttons. Over a solid page that's cheap; over

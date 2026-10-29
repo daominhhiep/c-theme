@@ -174,6 +174,21 @@
       if (!covered) scan(n);
     }
     pending.clear();
+    fitReads();
+  }
+
+  // A mask can belong to a column yet hang below it (the strip under the message box);
+  // the column's backing is stretched down to take it in rather than ending above it.
+  function fitReads() {
+    for (const el of document.querySelectorAll('[data-cw="read"]')) {
+      const bottom = el.getBoundingClientRect().bottom;
+      let ext = 0;
+      for (const m of el.querySelectorAll('[data-cw="mask"]')) ext = Math.max(ext, m.getBoundingClientRect().bottom - bottom);
+      const v = ext > 0 ? Math.round(ext) + 'px' : '';
+      if (el.style.getPropertyValue('--cw-ext') !== v) {
+        if (v) el.style.setProperty('--cw-ext', v); else el.style.removeProperty('--cw-ext');
+      }
+    }
   }
 
   new MutationObserver((recs) => {
