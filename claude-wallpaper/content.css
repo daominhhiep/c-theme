@@ -82,6 +82,8 @@ html.cw-glass-on[data-cw-text="dark"] [data-cw="read"] {
   text-shadow: 0 0 1px var(--cw-halo), 0 0 5px rgb(255 255 255 / 0.35);
 }
 html.cw-glass-on [data-cw="read"] pre { text-shadow: none; }
+/* claude.ai colours inline code with a stronger rule of its own. */
+html.cw-glass-on [data-cw="read"] code:not(pre code) { color: var(--cw-ink) !important; }
 
 /* ---------- picker ---------- */
 #cw-picker {
