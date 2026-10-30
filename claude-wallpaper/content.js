@@ -56,15 +56,21 @@
     if (renderer) renderer.setVeil(settings.veil, tone === 'dark' ? '12,12,16' : '250,250,252');
     // Text laid straight on the wallpaper follows the scene, not the page: dark text over
     // a bright sky, light text over a dark one, judged from the sky seen through the veil.
+    // The ink is the sky's own hue, deepened or paled, so it sits in the scene's palette.
     const sky = CW.byId(settings.scene).sky;
     if (sky) {
-      const lit = sky.reduce((sum, hex) => {
+      const rgb = [0, 0, 0];
+      for (const hex of sky) {
         const n = parseInt(hex.slice(1), 16);
-        return sum + (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255;
-      }, 0) / sky.length;
+        rgb[0] += (n >> 16) / sky.length; rgb[1] += ((n >> 8) & 255) / sky.length; rgb[2] += (n & 255) / sky.length;
+      }
+      const lit = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
       const seen = lit * (1 - settings.veil) + (tone === 'dark' ? 0.05 : 0.98) * settings.veil;
       const text = seen > 0.5 ? 'dark' : 'light';
+      const mix = (k, to) => `rgb(${rgb.map((c) => Math.round(c * k + to * (1 - k))).join(',')})`;
       if (root.dataset.cwText !== text) root.dataset.cwText = text;
+      root.style.setProperty('--cw-ink', text === 'dark' ? mix(0.16, 0) : mix(0.08, 255));
+      root.style.setProperty('--cw-halo', text === 'dark' ? mix(0.15, 255) : mix(0.15, 0));
     }
     // The page colour, read from an untagged probe since body's own fill is overridden.
     const probe = document.createElement('div');

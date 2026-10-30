@@ -67,24 +67,21 @@ html.cw-glass-on [data-cw]:not([data-cw="clear"], [data-cw="read"]) { text-shado
 /* Reading columns have no backing; a heavier weight and a tight dark outline keep long
    text legible over the moving scene. */
 html.cw-glass-on [data-cw="read"] :where(p, li, td, th, blockquote) { font-weight: 500; letter-spacing: 0.01em; }
-/* Text colour follows the scene's brightness (data-cw-text), not the page theme. claude.ai
+/* Text colour (--cw-ink, set from the scene's sky) follows the scene, not the page. claude.ai
    resolves its text colour above the column and its softer tones are see-through, so the
-   colour is set on every element inside, leaving code, links, icons and
-   anything on a surface of its own alone. */
-html.cw-glass-on[data-cw-text="light"] [data-cw="read"],
-html.cw-glass-on[data-cw-text="light"] [data-cw="read"] :where(*:not(code, pre, pre *, a, svg, svg *, [data-cw="card"] *, [data-cw="glass"] *, [data-cw="tint"] *, [data-cw="panel"] *)) {
-  color: #fff;
-}
-html.cw-glass-on[data-cw-text="dark"] [data-cw="read"],
-html.cw-glass-on[data-cw-text="dark"] [data-cw="read"] :where(*:not(code, pre, pre *, a, svg, svg *, [data-cw="card"] *, [data-cw="glass"] *, [data-cw="tint"] *, [data-cw="panel"] *)) {
-  color: rgb(16, 18, 22);
+   colour is set on every element inside, leaving code blocks, links,
+   icons and anything on a surface of its own alone. */
+html.cw-glass-on [data-cw="read"],
+html.cw-glass-on [data-cw="read"] :where(*:not(pre, pre *, a, svg, svg *, [data-cw="card"] *, [data-cw="glass"] *, [data-cw="tint"] *, [data-cw="panel"] *)) {
+  color: var(--cw-ink);
 }
 html.cw-glass-on[data-cw-text="light"] [data-cw="read"] {
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.95), 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 16px rgba(0, 0, 0, 0.75);
+  text-shadow: 0 0 2px var(--cw-halo), 0 1px 3px var(--cw-halo), 0 0 12px rgb(0 0 0 / 0.45);
 }
 html.cw-glass-on[data-cw-text="dark"] [data-cw="read"] {
-  text-shadow: 0 0 1px rgba(255, 255, 255, 0.9), 0 0 6px rgba(255, 255, 255, 0.45);
+  text-shadow: 0 0 1px var(--cw-halo), 0 0 5px rgb(255 255 255 / 0.35);
 }
+html.cw-glass-on [data-cw="read"] pre { text-shadow: none; }
 
 /* ---------- picker ---------- */
 #cw-picker {
