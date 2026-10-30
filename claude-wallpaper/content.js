@@ -71,6 +71,8 @@
       if (root.dataset.cwText !== text) root.dataset.cwText = text;
       root.style.setProperty('--cw-ink', text === 'dark' ? mix(0.16, 0) : mix(0.08, 255));
       root.style.setProperty('--cw-halo', text === 'dark' ? mix(0.15, 255) : mix(0.15, 0));
+      // Popovers that open inside a column go back to the page's own text colour.
+      if (document.body) root.style.setProperty('--cw-page-ink', getComputedStyle(document.body).color);
     }
     // The page colour, read from an untagged probe since body's own fill is overridden.
     const probe = document.createElement('div');

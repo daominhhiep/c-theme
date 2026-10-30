@@ -74,8 +74,14 @@ html.cw-glass-on [data-cw="read"] :is(strong, b) { font-weight: 700 !important; 
    colour is set on every element inside, leaving code blocks, links,
    icons and anything on a surface of its own alone. */
 html.cw-glass-on [data-cw="read"],
-html.cw-glass-on [data-cw="read"] :where(*:not(pre, pre *, a, svg, svg *, [data-cw="card"] *, [data-cw="glass"] *, [data-cw="tint"] *, [data-cw="panel"] *)) {
+html.cw-glass-on [data-cw="read"] :where(*:not(pre, pre *, a, svg, svg *, [data-cw="card"] *, [data-cw="glass"] *, [data-cw="tint"] *, [data-cw="panel"] *, [role="dialog"] *, [role="menu"] *, [role="listbox"] *, [role="tooltip"] *, [data-radix-popper-content-wrapper] *)) {
   color: var(--cw-ink);
+}
+/* Popovers and dialogs sit on claude.ai's own opaque fill, even when they open inside a
+   column or on clear ground, so they keep the page's text colour and no outline. */
+html.cw-glass-on [data-cw] :is([role="dialog"], [role="menu"], [role="listbox"], [role="tooltip"], [data-radix-popper-content-wrapper]) {
+  color: var(--cw-page-ink);
+  text-shadow: none;
 }
 html.cw-glass-on[data-cw-text="light"] [data-cw="read"] {
   text-shadow: 0 0 2px var(--cw-halo), 0 1px 3px var(--cw-halo), 0 0 12px rgb(0 0 0 / 0.45);
@@ -85,7 +91,7 @@ html.cw-glass-on[data-cw-text="dark"] [data-cw="read"] {
 }
 html.cw-glass-on [data-cw="read"] pre { text-shadow: none; }
 /* claude.ai colours inline code with a stronger rule of its own. */
-html.cw-glass-on [data-cw="read"] code:not(pre code) { color: var(--cw-ink) !important; }
+html.cw-glass-on [data-cw="read"] code:not(pre code, [role="dialog"] code, [data-radix-popper-content-wrapper] code) { color: var(--cw-ink) !important; }
 
 /* ---------- picker ---------- */
 #cw-picker {
