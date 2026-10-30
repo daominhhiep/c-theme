@@ -163,7 +163,11 @@
     const list = node.matches(TAGS) ? [node, ...node.querySelectorAll(TAGS)] : node.querySelectorAll(TAGS);
     for (const el of list) {
       const k = classify(el, vw, vh);
-      if (k) { if (el.getAttribute('data-cw') !== k) el.setAttribute('data-cw', k); }
+      if (k) {
+        if (el.getAttribute('data-cw') !== k) el.setAttribute('data-cw', k);
+        // The blur behind a reading column hangs off it, so it needs a positioned box.
+        if (k === 'read' && !el.hasAttribute('data-cw-pos') && getComputedStyle(el).position === 'static') el.setAttribute('data-cw-pos', '');
+      }
       else if (el.hasAttribute('data-cw')) el.removeAttribute('data-cw');
     }
   }

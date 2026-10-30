@@ -66,7 +66,32 @@ html.cw-glass-on[data-cw-tone="light"] [data-cw="clear"] {
 html.cw-glass-on [data-cw]:not([data-cw="clear"], [data-cw="read"]) { text-shadow: none; }
 /* Reading columns have no backing; a heavier weight and a tight dark outline keep long
    text legible over the moving scene. */
-html.cw-glass-on [data-cw="read"] :where(p, li, td, th, blockquote) { font-weight: 500; }
+html.cw-glass-on [data-cw="read"] :where(p, li, td, th, blockquote) { font-weight: 500; letter-spacing: 0.01em; }
+/* Behind the column the scene is blurred and muted, with no fill and feathered edges, so
+   the text is calm to read without a box around it. */
+html.cw-glass-on [data-cw="read"] { isolation: isolate; }
+html.cw-glass-on [data-cw="read"][data-cw-pos] { position: relative; }
+html.cw-glass-on [data-cw="read"]::before {
+  content: "";
+  position: absolute;
+  inset: -32px;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent),
+    linear-gradient(to bottom, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 40px, #000 calc(100% - 40px), transparent),
+    linear-gradient(to bottom, transparent, #000 40px, #000 calc(100% - 40px), transparent);
+  mask-composite: intersect;
+}
+html.cw-glass-on[data-cw-text="dark"] [data-cw="read"]::before {
+  backdrop-filter: blur(10px) saturate(0.5) brightness(1.15);
+  -webkit-backdrop-filter: blur(10px) saturate(0.5) brightness(1.15);
+}
+html.cw-glass-on[data-cw-text="light"] [data-cw="read"]::before {
+  backdrop-filter: blur(10px) saturate(0.5) brightness(0.7);
+  -webkit-backdrop-filter: blur(10px) saturate(0.5) brightness(0.7);
+}
 /* Text colour follows the scene's brightness (data-cw-text), not the page theme. claude.ai
    resolves its text colour above the column and its softer tones are see-through, so the
    colour is set on every element inside, leaving code, links, icons and
