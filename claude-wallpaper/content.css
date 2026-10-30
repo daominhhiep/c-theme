@@ -67,6 +67,8 @@ html.cw-glass-on [data-cw]:not([data-cw="clear"], [data-cw="read"]) { text-shado
 /* Reading columns have no backing; a heavier weight and a tight dark outline keep long
    text legible over the moving scene. */
 html.cw-glass-on [data-cw="read"] :where(p, li, td, th, blockquote) { font-weight: 500; letter-spacing: 0.01em; }
+/* claude.ai's bold is only one step above its body weight, so lift it above the heavier body. */
+html.cw-glass-on [data-cw="read"] :is(strong, b) { font-weight: 700 !important; }
 /* Text colour (--cw-ink, set from the scene's sky) follows the scene, not the page. claude.ai
    resolves its text colour above the column and its softer tones are see-through, so the
    colour is set on every element inside, leaving code blocks, links,
